@@ -2,6 +2,7 @@ from . import auth
 from flask import request, render_template, redirect, session, url_for
 from flask_gaming.models import User
 from flask_gaming import bcrypt
+from flask_gaming.helpers import login_required
 
 @auth.route('/')
 def index():
@@ -25,7 +26,7 @@ def login():
 
 
 @auth.route('/logout', methods=['GET'])
-# @login_required
+@login_required
 def logout():
     session.pop('logged_in', None)
     session.pop('username', None)
