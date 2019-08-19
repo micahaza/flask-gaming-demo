@@ -1,6 +1,7 @@
 import pytest
 from flask_gaming import create_app, db, bcrypt
 from flask_gaming.models import User
+from flask import session, request
 
 @pytest.fixture(scope='module')
 def new_user():
@@ -23,7 +24,7 @@ def test_client():
 def init_database():
     app = create_app('testing.cfg')
     db.create_all()
-    
+
     # Insert user data
     user = User('deezent', 'deezent@gmail.com', bcrypt.generate_password_hash('asdf'))
     db.session.add(user)
@@ -38,5 +39,10 @@ def init_database():
         db.drop_all()
 
 @pytest.fixture(scope='module')
-def logged_in_user():
-    pass
+def logged_in_client():
+    app = create_app('testing.cfg')
+    with app.test_client() as client:
+        with client.session_transaction() as sess:
+            sess['logged_in'] = True
+            sess['username'] = 'deezent'
+        yield client
