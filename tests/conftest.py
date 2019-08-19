@@ -4,7 +4,7 @@ from flask_gaming.models import User
 
 @pytest.fixture(scope='module')
 def new_user():
-    user = User('deezent1', 'deezent@gmail.com', bcrypt.generate_password_hash('asdf'))
+    user = User('deezent', 'deezent@gmail.com', bcrypt.generate_password_hash('asdf'))
     return user
 
 @pytest.fixture(scope='module')
@@ -21,20 +21,22 @@ def test_client():
 
 @pytest.fixture(scope='module')
 def init_database():
-    # Create the database and the database table
     app = create_app('testing.cfg')
     db.create_all()
     
     # Insert user data
-    user1 = User('deezent1', 'deezent1@gmail.com', bcrypt.generate_password_hash('asdf'))
-    user2 = User('deezent2', 'deezent2@gmail.com', bcrypt.generate_password_hash('asdf'))
-    db.session.add(user1)
-    db.session.add(user2)
+    user = User('deezent', 'deezent@gmail.com', bcrypt.generate_password_hash('asdf'))
+    db.session.add(user)
 
     # Commit the changes for the users
     db.session.commit()
 
-    yield db  # this is where the testing happens!
+    # this is where the testing happens!
+    yield db
 
     with app.app_context():
         db.drop_all()
+
+@pytest.fixture(scope='module')
+def logged_in_user():
+    pass
