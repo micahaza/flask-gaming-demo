@@ -28,7 +28,7 @@ def test_login_with_good_credentials(test_client, new_user):
     assert b"Login" not in response.data
     assert b"Create one" not in response.data
 
-def test_protected_page_access(logged_in_client):
+def test_protected_page_access_logged_in(logged_in_client):
     response = logged_in_client.get('/game/home')
     assert response.status_code == 200
     assert b"deezent" in response.data

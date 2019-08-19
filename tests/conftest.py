@@ -38,7 +38,7 @@ def init_database():
     with app.app_context():
         db.drop_all()
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope='function')
 def logged_in_client():
     app = create_app('testing.cfg')
     with app.test_client() as client:
