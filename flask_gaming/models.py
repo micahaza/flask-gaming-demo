@@ -17,7 +17,7 @@ class User(db.Model):
         self.password_hash = password_hash
 
     def __repr__(self):
-        return '<User {}>'.format(self.username)
+        return '<User({}) {} >'.format(str(self.id), self.username)
 
     def save(self):
         db.session.add(self)

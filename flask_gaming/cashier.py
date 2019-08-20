@@ -1,13 +1,13 @@
 from . import db
-from run import app
 from flask_gaming.models import RealMoney, BonusMoney
+from flask_gaming import config
 
 class Cashier(object):
     """
     Cashier manages user money, bonuses and restrictions.
     """
-    def __init__(self):
-        pass
+    def __init__(self, config):
+        self.config = config
 
     def deposit(self, user, amount):
         if user.real_money is not None:
@@ -25,5 +25,5 @@ class Cashier(object):
 
     def __deposit_bonus(self, user, amount):
         if amount > 100 and user.bonus_money is None:
-            user.bonus_money = BonusMoney(app.config['DEPOSIT_BONUS'])
+            user.bonus_money = BonusMoney(self.config['DEPOSIT_BONUS'])
             user.save()

@@ -20,6 +20,7 @@ def login():
              if bcrypt.check_password_hash(login.password_hash, password) == True:
                 session['logged_in'] = True
                 session['username'] = login.username
+                session['user_id'] = login.id
                 return redirect(url_for('game.index'))
         return redirect(url_for('auth.login'))
 

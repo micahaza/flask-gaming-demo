@@ -3,11 +3,15 @@ def test_page_loads(logged_in_client):
     assert b'Deposit' in rv.data
     assert rv.status_code == 200
 
-def test_1_deposit(logged_in_client):
+def test_1_deposit(logged_in_client, user):
+    assert user.real_money is None
+    assert user.bonus_money is None
+
     response = logged_in_client.post('/payment/deposit',
                 data=dict(amount=1),
                 follow_redirects=True)
     assert response.status_code == 200
+    assert user.real_money.balance == 1
 
 def test_100(logged_in_client):
     pass

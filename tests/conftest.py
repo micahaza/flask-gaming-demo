@@ -24,21 +24,22 @@ def test_client(app):
 
     ctx.pop()
 
-@pytest.fixture(scope='function')
-def logged_in_client(app):
-    with app.test_client() as client:
-        with client.session_transaction() as sess:
-            sess['logged_in'] = True
-            sess['username'] = 'deezent'
-        yield client
-
 @pytest.fixture(scope='module')
 def cashier(app):
-    yield Cashier()
+    yield Cashier(app.config)
 
 @pytest.fixture(scope='module')
 def user(app):
     user = User('deezent', 'deezent@gmail.com', bcrypt.generate_password_hash('asdf'))
     db.session.add(user)
     db.session.commit()
-    yield user            
+    yield user
+
+@pytest.fixture(scope='function')
+def logged_in_client(app, user):
+    with app.test_client() as client:
+        with client.session_transaction() as sess:
+            sess['logged_in'] = True
+            sess['username'] = user.username
+            sess['user_id'] = user.id
+        yield client
