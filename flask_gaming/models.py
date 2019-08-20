@@ -8,19 +8,14 @@ class User(db.Model):
     username = db.Column(db.String(64), index=True, unique=True)
     email = db.Column(db.String(120), index=True, unique=True)
     password_hash = db.Column(db.String(128))
-    wallet = db.relationship('Wallet', backref='user')
-
+    real_money = db.relationship('RealMoney', uselist=False, backref='user')
+    bonus_money = db.relationship('BonusMoney', uselist=False, backref='user')
+    
     def __init__(self, username=None, email=None, password_hash=None):
         self.username = username
         self.email = email
         self.password_hash = password_hash
 
-    def real_money_balance(self):
-        return 0
-        
-    def bonus_money_balance(self):
-        return 0
-        
     def __repr__(self):
         return '<User {}>'.format(self.username)
 
@@ -28,22 +23,35 @@ class User(db.Model):
         db.session.add(self)
         db.session.commit()
 
-class Wallet(db.Model):
+class RealMoney(db.Model):
 
-    __tablename__ = 'wallets'
-
+    __tablename__ = 'real_moneys'
+    
+    def __init__(self, balance=None):
+        self.balance = balance
+    
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    is_real_money_wallet = db.Column(db.Boolean, default=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False, unique=True)
+    # user = db.relationship("user", back_populates="real_money")
+    balance = db.Column(db.Float, default = 0)
 
-class WalletHistory(db.Model):
+    def __repr__(self):
+        return '<RealMoney {}>'.format(self.balance)
 
-    __tablename__ = 'wallet_histories'
+class BonusMoney(db.Model):
 
+    __tablename__ = 'bonus_moneys'
+
+    def __init__(self, balance=None):
+        self.balance = balance
+    
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    wallet_id = db.Column(db.Integer, db.ForeignKey('wallets.id'), nullable=False)
-    amount = db.Column(db.Float, nullable=False, default = 0)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False, unique=True)
+    # user = db.relationship("user", back_populates="bonus_money")
+    balance = db.Column(db.Float, default = 0)
+
+    def __repr__(self):
+        return '<BonusMoney {}>'.format(self.balance)
     
 class Bet(db.Model):
     

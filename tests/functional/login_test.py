@@ -4,7 +4,7 @@ def test_login_page_loads(test_client):
     assert b'Login' in rv.data
     assert rv.status_code == 200
 
-def test_login_with_wrong_credentials(test_client, init_database):
+def test_login_with_wrong_credentials(test_client, app):
     response = test_client.post('/auth/login',
                                 data=dict(username='asdff', password='asdf'),
                                 follow_redirects=True)
@@ -16,9 +16,9 @@ def test_login_with_wrong_credentials(test_client, init_database):
     assert b"Login" in response.data
     assert b"Create one" in response.data
 
-def test_login_with_good_credentials(test_client, new_user):
+def test_login_with_good_credentials(test_client, user):
     response = test_client.post('/auth/login',
-                                data=dict(username=new_user.username, password='asdf'),
+                                data=dict(username=user.username, password='asdf'),
                                 follow_redirects=True)
     assert response.status_code == 200
     assert b"deezent" in response.data

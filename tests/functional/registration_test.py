@@ -8,11 +8,11 @@ def test_form_loads(test_client):
 def test_empty_submit(test_client):
     pass
 
-def test_valid_data(test_client, init_database):
+def test_valid_data(test_client, app):
     pass
 
 def test_invalid_data(test_client):
     pass
 
-def test_double_registration(test_client, init_database):
+def test_double_registration(test_client, app):
     pass
