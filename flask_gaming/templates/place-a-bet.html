@@ -4,8 +4,13 @@
 {% include 'menu.html' %}
 
 <div class="card bg-light">
-    <br/>
-    <center><h1>Place a bet</h1></center>
-    <br/>
-</div>
+    <article class="card-body mx-auto" style="max-width: 400px;">
+        <h4 class="card-title mt-3 text-center">Let's play some spins</h4>
+        <form action="{{url_for('game.place_bet')}}" method="POST">
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary btn-block"> Spin and Win!!! </button>
+            </div>
+        </form>
+    </article>
+</div> <!-- card.// -->
 {% endblock %}
