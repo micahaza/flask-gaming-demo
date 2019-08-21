@@ -27,6 +27,6 @@ def test_cashier_bonus_more_than_100_deposit(app, user, cashier):
     assert user.real_money.balance == old_balance + 200
     assert user.bonus_money.balance == 20
 
-def test_login_bonus_cashier(app, user, cashier):
-    cashier.login_bonus(user)
-    assert user.bonus_money.balance == 20
+# def test_login_bonus_cashier(app, user, cashier):
+#     cashier.login_bonus(user)
+#     assert user.bonus_money.balance == 20
