@@ -10,6 +10,8 @@ class User(db.Model):
     password_hash = db.Column(db.String(128))
     real_money = db.relationship('RealMoney', uselist=False, backref='user')
     bonus_moneys = db.relationship('BonusMoney', uselist=True)
+    bets = db.relationship('Bet', uselist=True)
+    wins = db.relationship('Win', uselist=True)
     
     def __init__(self, username=None, email=None, password_hash=None):
         self.username = username
@@ -32,7 +34,6 @@ class RealMoney(db.Model):
     
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False, unique=True)
-    # user = db.relationship("user", back_populates="real_money")
     balance = db.Column(db.Float, default = 0)
 
     def __repr__(self):
@@ -47,7 +48,6 @@ class BonusMoney(db.Model):
     
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    # user = db.relationship("user", back_populates="bonus_money")
     balance = db.Column(db.Float, default = 0)
 
     def __repr__(self):
@@ -57,6 +57,9 @@ class Bet(db.Model):
     
     __tablename__ = 'bets'
 
+    def __init__(self, amount):
+        self.amount = amount
+
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     amount = db.Column(db.Float, nullable=False, default = 0)
@@ -64,6 +67,9 @@ class Bet(db.Model):
 class Win(db.Model):
     
     __tablename__ = 'wins'
+
+    def __init__(self, amount):
+        self.amount = amount
 
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
