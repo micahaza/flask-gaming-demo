@@ -12,8 +12,9 @@ def test_can_set_user_real_money_balance(app, user):
     assert user.real_money.balance == 100
 
 def test_can_set_user_bonus_money_balance(app, user):
-    assert user.bonus_money == None
-    user.bonus_money = BonusMoney(100)
+    assert user.bonus_moneys == []
+    bm = BonusMoney(100)
+    user.bonus_moneys.append(bm)
     user.save()
-    assert user.bonus_money.balance == 100
+    assert user.bonus_moneys[0].balance == 100
 

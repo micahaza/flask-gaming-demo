@@ -9,7 +9,7 @@ class User(db.Model):
     email = db.Column(db.String(120), index=True, unique=True)
     password_hash = db.Column(db.String(128))
     real_money = db.relationship('RealMoney', uselist=False, backref='user')
-    bonus_money = db.relationship('BonusMoney', uselist=False, backref='user')
+    bonus_moneys = db.relationship('BonusMoney')
     
     def __init__(self, username=None, email=None, password_hash=None):
         self.username = username
@@ -46,7 +46,7 @@ class BonusMoney(db.Model):
         self.balance = balance
     
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False, unique=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     # user = db.relationship("user", back_populates="bonus_money")
     balance = db.Column(db.Float, default = 0)
 
