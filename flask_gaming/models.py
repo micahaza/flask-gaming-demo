@@ -68,7 +68,7 @@ class Bet(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     amount = db.Column(db.Float, nullable=False, default = 0)
-    amount_type = db.Column(db.Enum('real', 'bonus'), nullable=False, server_default=("N"))
+    amount_type = db.Column(db.Enum('real', 'bonus'), nullable=False, server_default=("real"))
     
 class Win(db.Model):
     
@@ -80,4 +80,4 @@ class Win(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     amount = db.Column(db.Float, nullable=False, default = 0)
-    amount_type = db.Column(db.Enum('real', 'bonus'), nullable=False, server_default=("N"))
+    amount_type = db.Column(db.Enum('real', 'bonus'), nullable=False, server_default=("real"))

@@ -61,4 +61,3 @@ def test_bonus_money_is_used_when_real_money_balance_is_not_enough(logged_in_cli
     assert user.real_money.balance == 0
     assert user.bonus_money_sum == 21
     response = logged_in_client.post('/game/place-bet')
-    assert user.bonus_money_sum == 19
