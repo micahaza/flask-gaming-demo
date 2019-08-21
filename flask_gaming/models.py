@@ -9,7 +9,7 @@ class User(db.Model):
     email = db.Column(db.String(120), index=True, unique=True)
     password_hash = db.Column(db.String(128))
     real_money = db.relationship('RealMoney', uselist=False, backref='user')
-    bonus_moneys = db.relationship('BonusMoney')
+    bonus_moneys = db.relationship('BonusMoney', uselist=True)
     
     def __init__(self, username=None, email=None, password_hash=None):
         self.username = username

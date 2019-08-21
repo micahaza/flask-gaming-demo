@@ -62,4 +62,7 @@ def test_200_200_bonus_money_received(logged_in_client, user):
     assert response.status_code == 200
     assert user.real_money.balance == 741
     assert len(user.bonus_moneys) == 3
+    assert user.bonus_moneys[0].balance == 20
+    assert user.bonus_moneys[1].balance == 20
+    assert user.bonus_moneys[2].balance == 20
 

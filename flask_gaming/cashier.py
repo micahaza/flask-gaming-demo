@@ -21,7 +21,8 @@ class Cashier(object):
         pass
 
     def login_bonus(self, user):
-        user.bonus_money = BonusMoney(self.config['LOGIN_BONUS'], user=user)
+        bm = BonusMoney(self.config['LOGIN_BONUS'])
+        user.bonus_moneys.append(bm) 
         user.save()
 
     def __deposit_bonus(self, user, amount):
