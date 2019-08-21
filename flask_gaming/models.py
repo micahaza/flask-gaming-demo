@@ -1,4 +1,5 @@
 from . import db
+from sqlalchemy.ext.hybrid import hybrid_property
 
 class User(db.Model):
     
@@ -13,6 +14,10 @@ class User(db.Model):
     bets = db.relationship('Bet', uselist=True)
     wins = db.relationship('Win', uselist=True)
     
+    @hybrid_property
+    def bonus_money_sum(self):
+        return sum(bm.balance for bm in self.bonus_moneys)
+
     def __init__(self, username=None, email=None, password_hash=None):
         self.username = username
         self.email = email
@@ -63,6 +68,7 @@ class Bet(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     amount = db.Column(db.Float, nullable=False, default = 0)
+    amount_type = db.Column(db.Enum('real', 'bonus'), nullable=False, server_default=("N"))
     
 class Win(db.Model):
     
@@ -74,3 +80,4 @@ class Win(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     amount = db.Column(db.Float, nullable=False, default = 0)
+    amount_type = db.Column(db.Enum('real', 'bonus'), nullable=False, server_default=("N"))

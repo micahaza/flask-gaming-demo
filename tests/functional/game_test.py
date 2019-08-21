@@ -21,7 +21,7 @@ def test_bet_if_user_has_real_money_only(logged_in_client, user, cashier, app):
     cashier.deposit(user, 100)
     assert user.real_money.balance == 100
     response = logged_in_client.post('/game/place-bet')
-    assert user.real_money.balance == 100 - app.config['BET_AMOUNT']
+    assert user.real_money.balance in [100 - app.config['BET_AMOUNT'], 102]
     assert user.bets[0].amount == app.config['BET_AMOUNT']
     assert user.wins[0].amount in [0, 4]
     assert len(user.bonus_moneys) == 0
@@ -44,5 +44,21 @@ def test_when_bonus_money_is_not_enough_to_bet(logged_in_client, user):
         assert len(user.bonus_moneys) == 1
         assert user.bonus_moneys[0].balance == 1
     
-# def test_real_money_used_first(test_client):
-#     pass
+def test_real_money_used_first(logged_in_client, user, app):
+    user.real_money.balance = 100
+    bm = BonusMoney(20)
+    user.bonus_moneys.append(bm)
+    user.save()
+
+    response = logged_in_client.post('/game/place-bet')
+    assert user.real_money.balance in [100 - app.config['BET_AMOUNT'], 102]
+    assert user.bonus_moneys[0].balance == 1
+    assert user.bonus_moneys[1].balance == 20
+
+def test_bonus_money_is_used_when_real_money_balance_is_not_enough(logged_in_client, user, app):
+    user.real_money.balance = 0
+    user.save()
+    assert user.real_money.balance == 0
+    assert user.bonus_money_sum == 21
+    response = logged_in_client.post('/game/place-bet')
+    assert user.bonus_money_sum == 19

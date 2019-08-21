@@ -19,8 +19,9 @@ class GamePlay(object):
             user.real_money.balance -= self.config['BET_AMOUNT']
             user.bets.append(bet)
             user.wins.append(win)
+            user.real_money.balance += win.amount
             user.save()
-        # elif user.bonus_money[0].balance >= self.config['BET_AMOUNT']:
-        #     pass
+        elif user.bonus_money_sum >= self.config['BET_AMOUNT']:
+            pass
         else:
             raise NotEnoughMoneyException("User has not enough money to play")
