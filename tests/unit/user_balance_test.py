@@ -1,4 +1,4 @@
-from flask_gaming.models import User, RealMoney, BonusMoney
+from flask_gaming.models import RealMoney, BonusMoney, User
 
 def test_can_create_user(app):
     u = User('asdfg', 'adsfg@asdfg.hu', 'adsfg')

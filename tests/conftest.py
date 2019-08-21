@@ -3,6 +3,7 @@ from flask_gaming import create_app, db, bcrypt
 from flask_gaming.models import User
 from flask import session
 from flask_gaming.cashier import Cashier
+from flask_gaming.game_play import GamePlay
 
 @pytest.fixture(scope='module')
 def app():
@@ -27,6 +28,10 @@ def test_client(app):
 @pytest.fixture(scope='module')
 def cashier(app):
     yield Cashier(app.config)
+
+@pytest.fixture(scope='module')
+def game(app):
+    yield GamePlay(app.config)
 
 @pytest.fixture(scope='module')
 def user(app):

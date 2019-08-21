@@ -1,5 +1,3 @@
-from flask_gaming.models import User
-
 def test_can_create_cashier(app, cashier):
     assert cashier is not None
 
