@@ -12,7 +12,6 @@ def deposit():
         return render_template('deposit.html')
     if request.method == "POST":
         user = User.query.get(session['user_id'])
-        print(user)
         cashier = Cashier(app.config)
         cashier.deposit(user, float(request.form['amount'])) 
         return render_template('deposit.html')
