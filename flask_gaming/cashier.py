@@ -20,8 +20,9 @@ class Cashier(object):
     def withdraw(self, user, amount):
         pass
 
-    def __login_bonus(self, user, amount):
-        pass
+    def login_bonus(self, user):
+        user.bonus_money = BonusMoney(self.config['LOGIN_BONUS'])
+        user.save()
 
     def __deposit_bonus(self, user, amount):
         if amount > 100 and user.bonus_money is None:

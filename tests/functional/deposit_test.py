@@ -13,14 +13,14 @@ def test_1_deposit(logged_in_client, user):
     assert response.status_code == 200
     assert user.real_money.balance == 1
 
-def test_100(logged_in_client):
-    pass
+# def test_100(logged_in_client):
+#     pass
 
-def test_120(logged_in_client):
-    pass
+# def test_120(logged_in_client):
+#     pass
 
-def test_50_50(logged_in_client):
-    pass
+# def test_50_50(logged_in_client):
+#     pass
 
-def test_200(logged_in_client):
-    pass
+# def test_200(logged_in_client):
+#     pass

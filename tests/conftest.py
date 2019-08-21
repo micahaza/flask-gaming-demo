@@ -35,7 +35,7 @@ def user(app):
     db.session.commit()
     yield user
 
-@pytest.fixture(scope='function')
+@pytest.fixture(scope='module')
 def logged_in_client(app, user):
     with app.test_client() as client:
         with client.session_transaction() as sess:
