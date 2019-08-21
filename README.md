@@ -3,7 +3,7 @@
 # Setup guide
 
 ## Prerequisites
-* python3
+* python3, mysql server
 
 ## Setup virtual environment
 * python3 -m virtualenv env
@@ -12,6 +12,21 @@
 ## Install required library
 * pip install pip --upgrade
 * pip install -r requirements.txt
+
+## Configuring the app
+You have to create a folder called instance in the project root. Create two files, development.cfg, testing.cfg
+
+Example content of these files (development.cfg):
+```
+DEBUG = True
+SQLALCHEMY_DATABASE_URI = 'mysql://user:pass@localhost/flask_gaming_dev'
+SQLALCHEMY_TRACK_MODIFICATIONS = False
+SECRET_KEY = '2s-odAVOokF7bOgzFQqkPD0s6oiz7IAlnnA3I4ogwZUarxbtJDqKin3alZxRaL1U'
+
+LOGIN_BONUS = 100
+DEPOSIT_BONUS = 20
+WAGERING_REQUIREMENT = 20
+```
 
 ## Database install && migrate
 * mysql> CREATE DATABASE flask_gaming_dev;
