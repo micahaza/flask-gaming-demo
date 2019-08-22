@@ -1,6 +1,6 @@
 import pytest
 from flask_gaming.game_play import NotEnoughMoneyException
-from flask_gaming.models import BonusMoney, User
+from flask_gaming.models import BonusMoneyWallet, User
 
 def test_page_loads(logged_in_client):
     response = logged_in_client.get('/game/place-bet')
@@ -30,7 +30,7 @@ def test_bet_if_user_has_real_money_only(logged_in_client, user, cashier, app):
 
 def test_when_bonus_money_is_not_enough_to_bet(logged_in_client, user):
     user.real_money.balance = 0
-    bm = BonusMoney(1)
+    bm = BonusMoneyWallet(1)
     user.bonus_moneys.append(bm)
     user.save()
     assert user.real_money.balance == 0
@@ -46,7 +46,7 @@ def test_when_bonus_money_is_not_enough_to_bet(logged_in_client, user):
     
 def test_real_money_used_first(logged_in_client, user, app):
     user.real_money.balance = 100
-    bm = BonusMoney(20)
+    bm = BonusMoneyWallet(20)
     user.bonus_moneys.append(bm)
     user.save()
 
@@ -76,11 +76,11 @@ def test_bonus_money_is_used_correcly(logged_in_client, user, app):
     user.save()
     updated_user = User.query.get(user.id)
     ## add three 1 euro bonus money to user
-    bm = BonusMoney(1)
+    bm = BonusMoneyWallet(1)
     user.bonus_moneys.append(bm)
-    bm = BonusMoney(1)
+    bm = BonusMoneyWallet(1)
     user.bonus_moneys.append(bm)
-    bm = BonusMoney(1)
+    bm = BonusMoneyWallet(1)
     user.bonus_moneys.append(bm)
     user.save()
     # spin

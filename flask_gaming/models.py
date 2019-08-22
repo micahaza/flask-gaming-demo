@@ -9,8 +9,8 @@ class User(db.Model):
     username = db.Column(db.String(64), index=True, unique=True)
     email = db.Column(db.String(120), index=True, unique=True)
     password_hash = db.Column(db.String(128))
-    real_money = db.relationship('RealMoney', uselist=False, backref='user')
-    bonus_moneys = db.relationship('BonusMoney', uselist=True)
+    real_money = db.relationship('RealMoneyWallet', uselist=False, backref='user')
+    bonus_moneys = db.relationship('BonusMoneyWallet', uselist=True)
     bets = db.relationship('Bet', uselist=True)
     wins = db.relationship('Win', uselist=True)
     
@@ -30,7 +30,7 @@ class User(db.Model):
         db.session.add(self)
         db.session.commit()
 
-class RealMoney(db.Model):
+class RealMoneyWallet(db.Model):
 
     __tablename__ = 'real_moneys'
     
@@ -42,9 +42,9 @@ class RealMoney(db.Model):
     balance = db.Column(db.Float, default = 0)
 
     def __repr__(self):
-        return '<RealMoney {}>'.format(self.balance)
+        return '<RealMoneyWallet {}>'.format(self.balance)
 
-class BonusMoney(db.Model):
+class BonusMoneyWallet(db.Model):
 
     __tablename__ = 'bonus_moneys'
 
@@ -56,7 +56,7 @@ class BonusMoney(db.Model):
     balance = db.Column(db.Float, default = 0)
 
     def __repr__(self):
-        return '<BonusMoney {}>'.format(self.balance)
+        return '<BonusMoneyWallet {}>'.format(self.balance)
     
 class Bet(db.Model):
     

@@ -1,4 +1,4 @@
-from flask_gaming.models import User, Bet, Win, RealMoney, BonusMoney
+from flask_gaming.models import User, Bet, Win, BonusMoneyWallet
 # from flask import current_app
 import random
 
@@ -13,10 +13,12 @@ class GamePlay(object):
         self.config = config
 
     def spin(self, user):
+        
+        bet = Bet(self.config['BET_AMOUNT'])
+        win = Win(random.choice([0, 1])* 4)
+        
         # real money used first
         if user.real_money is not None and user.real_money.balance >= self.config['BET_AMOUNT']:
-            bet = Bet(self.config['BET_AMOUNT'])
-            win = Win(random.choice([0, 1])* 4)
             user.real_money.balance -= self.config['BET_AMOUNT']
             user.bets.append(bet)
             user.wins.append(win)
