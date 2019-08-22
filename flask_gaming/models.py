@@ -32,7 +32,7 @@ class User(db.Model):
 
 class RealMoneyWallet(db.Model):
 
-    __tablename__ = 'real_moneys'
+    __tablename__ = 'real_money_wallets'
     
     def __init__(self, balance=None):
         self.balance = balance
@@ -46,27 +46,32 @@ class RealMoneyWallet(db.Model):
 
 class BonusMoneyWallet(db.Model):
 
-    __tablename__ = 'bonus_moneys'
+    __tablename__ = 'bonus_money_wallets'
 
     def __init__(self, balance=None):
+        self.initial_balance = balance
         self.balance = balance
     
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    initial_balance = db.Column(db.Float, default = 0)
     balance = db.Column(db.Float, default = 0)
 
     def __repr__(self):
         return '<BonusMoneyWallet {}>'.format(self.balance)
-    
+
 class Bet(db.Model):
     
     __tablename__ = 'bets'
 
-    def __init__(self, amount):
+    def __init__(self, amount, amount_type='real', bonus_wallet_id = None):
         self.amount = amount
+        self.amount_type = amount_type
+        self.bonus_wallet_id = bonus_wallet_id
 
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    bonus_wallet_id = db.Column(db.Integer, db.ForeignKey('bonus_money_wallets.id'), nullable=True)
     amount = db.Column(db.Float, nullable=False, default = 0)
     amount_type = db.Column(db.Enum('real', 'bonus'), nullable=False, server_default=("real"))
     
@@ -74,10 +79,13 @@ class Win(db.Model):
     
     __tablename__ = 'wins'
 
-    def __init__(self, amount):
+    def __init__(self, amount, amount_type='real', bonus_wallet_id = None):
         self.amount = amount
-
+        self.amount_type = amount_type
+        self.bonus_wallet_id = bonus_wallet_id
+        
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    bonus_wallet_id = db.Column(db.Integer, db.ForeignKey('bonus_money_wallets.id'), nullable=True)
     amount = db.Column(db.Float, nullable=False, default = 0)
     amount_type = db.Column(db.Enum('real', 'bonus'), nullable=False, server_default=("real"))

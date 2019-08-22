@@ -41,6 +41,10 @@ def user(app):
     yield user
 
 @pytest.fixture(scope='module')
+def testdb(app):
+    yield db
+    
+@pytest.fixture(scope='module')
 def logged_in_client(app, user):
     with app.test_client() as client:
         with client.session_transaction() as sess:

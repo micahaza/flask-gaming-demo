@@ -63,36 +63,53 @@ def test_bonus_money_is_used_when_real_money_balance_is_not_enough(logged_in_cli
     response = logged_in_client.post('/game/place-bet')
     updated_user = User.query.get(user.id)
     assert updated_user.real_money.balance == 0
-    assert updated_user.bonus_money_sum == 19
+    assert updated_user.bonus_money_sum in [19, 23]
 
-def test_bonus_money_is_used_correcly(logged_in_client, user, app):
+def test_bonus_money_is_used_correcly(logged_in_client, user, testdb):
     user.real_money.balance = 0
     user.save()
     assert user.real_money.balance == 0
     # reset user bonus moneys
-    from flask_gaming import db
-    for bs in user.bonus_moneys:
-        db.session.delete(bs)
-    user.save()
     updated_user = User.query.get(user.id)
+    
+    testdb.engine.execute("delete from bets")
+    testdb.engine.execute("delete from wins")
+    testdb.engine.execute("delete from bonus_money_wallets")
+    testdb.session.commit()
+
     ## add three 1 euro bonus money to user
     bm = BonusMoneyWallet(1)
     user.bonus_moneys.append(bm)
     bm = BonusMoneyWallet(1)
     user.bonus_moneys.append(bm)
-    bm = BonusMoneyWallet(1)
+    bm = BonusMoneyWallet(10)
     user.bonus_moneys.append(bm)
     user.save()
     # spin
     response = logged_in_client.post('/game/place-bet')
     assert user.real_money.balance == 0
-    assert user.bonus_money_sum == 1
+    assert user.bonus_money_sum in [10, 14]
 
-def test_if_real_money_used_win_will_return_to_the_real_money_wallet(logged_in_client, user, app):
+def test_if_real_money_used_win_will_return_to_the_real_money_wallet(logged_in_client, user):
     user.real_money.balance = 20
     user.save()
     response = logged_in_client.post('/game/place-bet')
     assert user.real_money.balance in [18, 22]
 
-# def test_if_bonus_money_used_win_will_return_to_the_bonus_money_wallet(logged_in_client, user, app):
-#         pass
+def test_bonus_money_wins_return_to_the_correct_wallet(logged_in_client, user, testdb):
+    testdb.engine.execute("delete from bets")
+    testdb.engine.execute("delete from wins")
+    testdb.engine.execute("delete from bonus_money_wallets")
+    testdb.session.commit()
+
+    user.real_money.balance = 0
+    bm = BonusMoneyWallet(1)
+    user.bonus_moneys.append(bm)
+    bm2 = BonusMoneyWallet(10)
+    user.bonus_moneys.append(bm2)
+    user.save()
+    assert user.real_money.balance == 0
+    assert user.bonus_money_sum == 11
+    response = logged_in_client.post('/game/place-bet')
+    assert user.real_money.balance == 0
+    assert bm2.balance in [8, 12]
