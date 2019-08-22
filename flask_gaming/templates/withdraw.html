@@ -4,8 +4,18 @@
 {% include 'menu.html' %}
 
 <div class="card bg-light">
-    <br/>
-    <center><h1>Withdrawal</h1></center>
-    <br/>
-</div>
+        <article class="card-body mx-auto" style="max-width: 400px;">
+            <h4 class="card-title mt-3 text-center">Withdraw</h4>
+            <form action="{{url_for('payment.withdraw')}}" method="POST">
+                <div class="form-group input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"> <i class="fa fa-dollar-sign"></i> </span>
+                    </div>
+                    <input name="amount" class="form-control" placeholder="Amount" type="text">
+                </div> <!-- form-group// -->
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary btn-block"> Withdraw </button>
+                </div> <!-- form-group// -->      
+            </form>
+        </article>
 {% endblock %}
