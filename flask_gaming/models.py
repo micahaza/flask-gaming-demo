@@ -1,5 +1,6 @@
 from . import db
 from sqlalchemy.ext.hybrid import hybrid_property
+from flask import current_app
 
 class User(db.Model):
     
@@ -52,10 +53,15 @@ class BonusMoneyWallet(db.Model):
         self.initial_balance = balance
         self.balance = balance
     
+    @hybrid_property
+    def cash_in_possible(self):
+        return self.initial_balance * current_app.config['WAGERING_REQUIREMENT'] <= sum(b.amount for b in self.bets)
+
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     initial_balance = db.Column(db.Float, default = 0)
     balance = db.Column(db.Float, default = 0)
+    bets = db.relationship('Bet', uselist=True)
 
     def __repr__(self):
         return '<BonusMoneyWallet {}>'.format(self.balance)
@@ -64,14 +70,14 @@ class Bet(db.Model):
     
     __tablename__ = 'bets'
 
-    def __init__(self, amount, amount_type='real', bonus_wallet_id = None):
+    def __init__(self, amount, amount_type='real', bonus_money_wallet_id = None):
         self.amount = amount
         self.amount_type = amount_type
-        self.bonus_wallet_id = bonus_wallet_id
+        self.bonus_money_wallet_id = bonus_money_wallet_id
 
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    bonus_wallet_id = db.Column(db.Integer, db.ForeignKey('bonus_money_wallets.id'), nullable=True)
+    bonus_money_wallet_id = db.Column(db.Integer, db.ForeignKey('bonus_money_wallets.id'), nullable=True)
     amount = db.Column(db.Float, nullable=False, default = 0)
     amount_type = db.Column(db.Enum('real', 'bonus'), nullable=False, server_default=("real"))
     
@@ -79,13 +85,13 @@ class Win(db.Model):
     
     __tablename__ = 'wins'
 
-    def __init__(self, amount, amount_type='real', bonus_wallet_id = None):
+    def __init__(self, amount, amount_type='real', bonus_money_wallet_id = None):
         self.amount = amount
         self.amount_type = amount_type
-        self.bonus_wallet_id = bonus_wallet_id
-        
+        self.bonus_money_wallet_id = bonus_money_wallet_id
+
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    bonus_wallet_id = db.Column(db.Integer, db.ForeignKey('bonus_money_wallets.id'), nullable=True)
+    bonus_money_wallet_id = db.Column(db.Integer, db.ForeignKey('bonus_money_wallets.id'), nullable=True)
     amount = db.Column(db.Float, nullable=False, default = 0)
     amount_type = db.Column(db.Enum('real', 'bonus'), nullable=False, server_default=("real"))

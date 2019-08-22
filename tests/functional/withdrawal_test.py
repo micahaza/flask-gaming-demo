@@ -25,3 +25,4 @@ def test_can_not_withdraw_if_has_not_enough_money(logged_in_client, user):
         assert response.status_code == 200
         assert user.real_money.balance == 0
         assert user.real_money.balance == 0
+
