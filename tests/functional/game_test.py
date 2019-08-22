@@ -1,6 +1,6 @@
 import pytest
 from flask_gaming.game_play import NotEnoughMoneyException
-from flask_gaming.models import BonusMoneyWallet, User
+from flask_gaming.models import BonusMoneyWallet, RealMoneyWallet, User
 
 def test_page_loads(logged_in_client):
     response = logged_in_client.get('/game/place-bet')
@@ -88,3 +88,11 @@ def test_bonus_money_is_used_correcly(logged_in_client, user, app):
     assert user.real_money.balance == 0
     assert user.bonus_money_sum == 1
 
+def test_if_real_money_used_win_will_return_to_the_real_money_wallet(logged_in_client, user, app):
+    user.real_money.balance = 20
+    user.save()
+    response = logged_in_client.post('/game/place-bet')
+    assert user.real_money.balance in [18, 22]
+
+# def test_if_bonus_money_used_win_will_return_to_the_bonus_money_wallet(logged_in_client, user, app):
+#         pass
