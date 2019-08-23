@@ -14,7 +14,7 @@ def index():
 def place_bet():
     if request.method == 'POST':
         user = User.query.get(session['user_id'])
-        game_play = GamePlay(current_app.config)
-        game_play.spin(user)
+        game_play = GamePlay(current_app.config, user)
+        game_play.spin()
     return render_template('place-a-bet.html')
 

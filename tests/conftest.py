@@ -30,15 +30,15 @@ def cashier(app):
     yield Cashier(app.config)
 
 @pytest.fixture(scope='module')
-def game(app):
-    yield GamePlay(app.config)
-
-@pytest.fixture(scope='module')
 def user(app):
     user = User('deezent', 'deezent@gmail.com', bcrypt.generate_password_hash('asdf'))
     db.session.add(user)
     db.session.commit()
     yield user
+
+@pytest.fixture(scope='module')
+def game(app, user):
+    yield GamePlay(app.config, user)
 
 @pytest.fixture(scope='module')
 def testdb(app):
