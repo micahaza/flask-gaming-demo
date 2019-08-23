@@ -41,5 +41,10 @@ WAGERING_REQUIREMENT = 20
 * export FLASK_APP=run.py
 * py.test -v
 
-### Request and responses
+### Run the app
+* ./start.sh
+
+### Assumptions
+We assume that bonus money balance will be always divisible with the bet amount so we won't have bonus money wallets holding less than a bet amount.
+
 
