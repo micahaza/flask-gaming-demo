@@ -1,5 +1,8 @@
 # Simple iGaming platform
 
+## Assumptions
+We assume that bonus money balance will be always divisible with the bet amount so we won't have bonus money wallets holding less than a bet amount. We consider empty bonus wallets as depleted.
+
 # Setup guide
 
 ## Prerequisites
@@ -43,8 +46,3 @@ WAGERING_REQUIREMENT = 20
 
 ### Run the app
 * ./start.sh
-
-### Assumptions
-We assume that bonus money balance will be always divisible with the bet amount so we won't have bonus money wallets holding less than a bet amount.
-
-
