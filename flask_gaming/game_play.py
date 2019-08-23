@@ -13,7 +13,8 @@ class BaseSpinner(object):
         self.user = user
 
     def random_win(self):
-        return random.choice([0, 0, 1])* 4
+        # RNG magic :)
+        return random.choice([0, 0, 1]) * 4
 
 class RealMoneySpinner(BaseSpinner):
     
@@ -70,8 +71,5 @@ class GamePlay(object):
             raise NotEnoughMoneyException("User has not enough money to play")
 
     def spin(self):
-        # RNG magic :)
-        win_amount = random.choice([0, 0, 1])* 4
         spinner = self.get_spinner()
         spinner.spin()
-        
