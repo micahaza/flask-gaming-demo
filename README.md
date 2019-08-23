@@ -1,7 +1,7 @@
 # Simple iGaming platform
 
 ## Assumptions
-We assume that bonus money balance will be always divisible with the bet amount so we won't have bonus money wallets holding less than a bet amount. We consider empty bonus wallets as depleted.
+We assume that bonus money balance will be always divisible with the bet amount so we won't have bonus money wallets holding less than a bet amount. We consider wallets having less than a bet or empty as depleted.
 
 # Setup guide
 
