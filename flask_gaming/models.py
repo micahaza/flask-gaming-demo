@@ -11,13 +11,13 @@ class User(db.Model):
     email = db.Column(db.String(120), index=True, unique=True)
     password_hash = db.Column(db.String(128))
     real_money_wallet = db.relationship('RealMoneyWallet', uselist=False, backref='user')
-    bonus_moneys = db.relationship('BonusMoneyWallet', uselist=True)
+    bonus_money_wallets = db.relationship('BonusMoneyWallet', uselist=True)
     bets = db.relationship('Bet', uselist=True)
     wins = db.relationship('Win', uselist=True)
     
     @hybrid_property
     def bonus_money_sum(self):
-        return sum(bm.balance for bm in self.bonus_moneys)
+        return sum(bm.balance for bm in self.bonus_money_wallets)
 
     def __init__(self, username=None, email=None, password_hash=None):
         self.username = username

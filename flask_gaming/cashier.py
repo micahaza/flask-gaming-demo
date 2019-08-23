@@ -28,11 +28,11 @@ class Cashier(object):
 
     def login_bonus(self, user):
         bm = BonusMoneyWallet(self.config['LOGIN_BONUS'])
-        user.bonus_moneys.append(bm) 
+        user.bonus_money_wallets.append(bm) 
         user.save()
 
     def __deposit_bonus(self, user, amount):
         if amount > 100:
             bm = BonusMoneyWallet(self.config['DEPOSIT_BONUS'])
-            user.bonus_moneys.append(bm)
+            user.bonus_money_wallets.append(bm)
             user.save()

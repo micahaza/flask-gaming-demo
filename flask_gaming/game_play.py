@@ -38,7 +38,7 @@ class BonusMoneySpinner(BaseSpinner):
     
     def spin(self):
         win_amount = self.random_win()
-        for bw in self.user.bonus_moneys:
+        for bw in self.user.bonus_money_wallets:
             if bw.balance >= self.config['BET_AMOUNT']:
                 bw.balance -= self.config['BET_AMOUNT']
                 bet = Bet(self.config['BET_AMOUNT'], amount_type='bonus', bonus_money_wallet_id = bw.id)
