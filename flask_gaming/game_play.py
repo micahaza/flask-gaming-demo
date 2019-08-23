@@ -38,13 +38,16 @@ class BonusMoneySpinner(BaseSpinner):
     
     def spin(self):
         win_amount = self.random_win()
-        for bw in self.user.bonus_money_wallets:
+        # non_depleted_wallets = [bw for bw in self.user.bonus_money_wallets if bw.depleted == False]
+        for bw in [bw for bw in self.user.bonus_money_wallets if bw.depleted == False]:
             if bw.balance >= self.config['BET_AMOUNT']:
                 bw.balance -= self.config['BET_AMOUNT']
                 bet = Bet(self.config['BET_AMOUNT'], amount_type='bonus', bonus_money_wallet_id = bw.id)
                 win = Win(win_amount, amount_type='bonus', bonus_money_wallet_id = bw.id)
                 if win_amount > 0:
                     bw.balance += win_amount
+                if bw.balance < self.config['BET_AMOUNT']:
+                    bw.depleted = True
                 self.user.bets.append(bet)
                 self.user.wins.append(win)
                 if bw.cash_in_possible:
@@ -52,6 +55,8 @@ class BonusMoneySpinner(BaseSpinner):
                     self.user.real_money_wallet.balance += bw.balance
                     # clean up this bonus wallet
                     bw.balance = 0
+                    bw.depleted = True
+                break;
         self.user.save()
 
 class GamePlay(object):

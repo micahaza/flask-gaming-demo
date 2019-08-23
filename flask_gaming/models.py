@@ -61,8 +61,9 @@ class BonusMoneyWallet(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     initial_balance = db.Column(db.Float, default = 0)
     balance = db.Column(db.Float, default = 0)
+    depleted = db.Column(db.Boolean, default = False)
     bets = db.relationship('Bet', uselist=True)
-
+    
     def __repr__(self):
         return '<BonusMoneyWallet {}>'.format(self.balance)
 
