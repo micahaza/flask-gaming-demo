@@ -25,10 +25,10 @@ class RealMoneySpinner(BaseSpinner):
         win_amount = self.random_win()
         bet = Bet(self.config['BET_AMOUNT'], amount_type='real')
         win = Win(win_amount, amount_type='real')
-        self.user.real_money.balance -= self.config['BET_AMOUNT']
+        self.user.real_money_wallet.balance -= self.config['BET_AMOUNT']
         self.user.bets.append(bet)
         self.user.wins.append(win)
-        self.user.real_money.balance += win_amount
+        self.user.real_money_wallet.balance += win_amount
         self.user.save()
 
 class BonusMoneySpinner(BaseSpinner):
@@ -49,7 +49,7 @@ class BonusMoneySpinner(BaseSpinner):
                 self.user.wins.append(win)
                 if bw.cash_in_possible:
                     # convert bonus money to real money and transfer it to player
-                    self.user.real_money.balance += bw.balance
+                    self.user.real_money_wallet.balance += bw.balance
                     # clean up this bonus wallet
                     bw.balance = 0
         self.user.save()
@@ -59,12 +59,12 @@ class GamePlay(object):
     def __init__(self, config, user):
         self.config = config
         self.user = user
-        self.real_money_spinner = RealMoneySpinner(config, user)
+        self.real_money_wallet_spinner = RealMoneySpinner(config, user)
         self.bonus_money_spinner = BonusMoneySpinner(config, user)
 
     def get_spinner(self):
-        if self.user.real_money is not None and self.user.real_money.balance >= self.config['BET_AMOUNT']:
-            return self.real_money_spinner
+        if self.user.real_money_wallet is not None and self.user.real_money_wallet.balance >= self.config['BET_AMOUNT']:
+            return self.real_money_wallet_spinner
         elif self.user.bonus_money_sum >= self.config['BET_AMOUNT']:
             return self.bonus_money_spinner
         else:

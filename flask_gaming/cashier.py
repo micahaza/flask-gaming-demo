@@ -12,16 +12,16 @@ class Cashier(object):
         self.config = config
 
     def deposit(self, user, amount):
-        if user.real_money is not None:
-            user.real_money.balance += amount
+        if user.real_money_wallet is not None:
+            user.real_money_wallet.balance += amount
         else:
-            user.real_money = RealMoneyWallet(amount)
+            user.real_money_wallet = RealMoneyWallet(amount)
         user.save()
         self.__deposit_bonus(user, amount)
 
     def withdraw(self, user, amount):
-        if user.real_money is not None and user.real_money.balance >= amount:
-            user.real_money.balance -= amount
+        if user.real_money_wallet is not None and user.real_money_wallet.balance >= amount:
+            user.real_money_wallet.balance -= amount
             user.save()
         else:
             raise NotEnoughMoneyException("User has not enough money to withdraw")

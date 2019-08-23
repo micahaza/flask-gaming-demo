@@ -10,7 +10,7 @@ class User(db.Model):
     username = db.Column(db.String(64), index=True, unique=True)
     email = db.Column(db.String(120), index=True, unique=True)
     password_hash = db.Column(db.String(128))
-    real_money = db.relationship('RealMoneyWallet', uselist=False, backref='user')
+    real_money_wallet = db.relationship('RealMoneyWallet', uselist=False, backref='user')
     bonus_moneys = db.relationship('BonusMoneyWallet', uselist=True)
     bets = db.relationship('Bet', uselist=True)
     wins = db.relationship('Win', uselist=True)
