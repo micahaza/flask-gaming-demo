@@ -42,8 +42,14 @@ class BonusMoneySpinner(BaseSpinner):
                 bw.depleted = True
         self.user.save()
 
-    def bonus_money_convert(self):
-        pass
+    def bonus_money_convert(self, bonus_wallet):
+        if bonus_wallet.cash_in_possible:
+            # convert bonus money to real money and transfer it to player
+            self.user.real_money_wallet.balance += bonus_wallet.balance
+            # clean up this bonus wallet
+            bonus_wallet.balance = 0
+            bbonus_wallet.depleted = True
+        self.user.save()
 
     def spin(self):
 
@@ -57,12 +63,7 @@ class BonusMoneySpinner(BaseSpinner):
                 bw.balance += win_amount
             self.user.bets.append(bet)
             self.user.wins.append(win)
-            if bw.cash_in_possible:
-                # convert bonus money to real money and transfer it to player
-                self.user.real_money_wallet.balance += bw.balance
-                # clean up this bonus wallet
-                bw.balance = 0
-                bw.depleted = True
+            self.bonus_money_convert(bw)
             break;
         self.user.save()
 
