@@ -63,7 +63,7 @@ def test_bonus_money_is_used_when_real_money_balance_is_not_enough(logged_in_cli
     response = logged_in_client.post('/game/place-bet')
     updated_user = User.query.get(user.id)
     assert updated_user.real_money_wallet.balance == 0
-    assert updated_user.bonus_money_sum in [19, 23]
+    assert updated_user.bonus_money_sum in [18, 22]
 
 def test_bonus_money_is_used_correcly(logged_in_client, user, testdb):
     user.real_money_wallet.balance = 0
@@ -88,7 +88,7 @@ def test_bonus_money_is_used_correcly(logged_in_client, user, testdb):
     # spin
     response = logged_in_client.post('/game/place-bet')
     assert user.real_money_wallet.balance == 0
-    assert user.bonus_money_sum in [10, 14]
+    assert user.bonus_money_sum in [8, 12]
 
 def test_if_real_money_used_win_will_return_to_the_real_money_wallet(logged_in_client, user):
     user.real_money_wallet.balance = 20

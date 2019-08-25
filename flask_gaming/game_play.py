@@ -36,27 +36,34 @@ class BonusMoneySpinner(BaseSpinner):
     def __init__(self, config, user):
         super(BonusMoneySpinner, self).__init__(config, user)
     
+    def mark_depleted_wallets(self):
+        for bw in (bw for bw in self.user.bonus_money_wallets if bw.depleted == False):
+            if bw.balance <= self.config['BET_AMOUNT']:
+                bw.depleted = True
+        self.user.save()
+
+    def bonus_money_convert(self):
+        pass
+
     def spin(self):
+
+        self.mark_depleted_wallets()
         win_amount = self.random_win()
-        # non_depleted_wallets = [bw for bw in self.user.bonus_money_wallets if bw.depleted == False]
-        for bw in [bw for bw in self.user.bonus_money_wallets if bw.depleted == False]:
-            if bw.balance >= self.config['BET_AMOUNT']:
-                bw.balance -= self.config['BET_AMOUNT']
-                bet = Bet(self.config['BET_AMOUNT'], amount_type='bonus', bonus_money_wallet_id = bw.id)
-                win = Win(win_amount, amount_type='bonus', bonus_money_wallet_id = bw.id)
-                if win_amount > 0:
-                    bw.balance += win_amount
-                if bw.balance < self.config['BET_AMOUNT']:
-                    bw.depleted = True
-                self.user.bets.append(bet)
-                self.user.wins.append(win)
-                if bw.cash_in_possible:
-                    # convert bonus money to real money and transfer it to player
-                    self.user.real_money_wallet.balance += bw.balance
-                    # clean up this bonus wallet
-                    bw.balance = 0
-                    bw.depleted = True
-                break;
+        for bw in (bw for bw in self.user.bonus_money_wallets if bw.depleted == False):
+            bw.balance -= self.config['BET_AMOUNT']
+            bet = Bet(self.config['BET_AMOUNT'], amount_type='bonus', bonus_money_wallet_id = bw.id)
+            win = Win(win_amount, amount_type='bonus', bonus_money_wallet_id = bw.id)
+            if win_amount > 0:
+                bw.balance += win_amount
+            self.user.bets.append(bet)
+            self.user.wins.append(win)
+            if bw.cash_in_possible:
+                # convert bonus money to real money and transfer it to player
+                self.user.real_money_wallet.balance += bw.balance
+                # clean up this bonus wallet
+                bw.balance = 0
+                bw.depleted = True
+            break;
         self.user.save()
 
 class GamePlay(object):

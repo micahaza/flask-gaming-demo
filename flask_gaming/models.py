@@ -17,7 +17,7 @@ class User(db.Model):
     
     @hybrid_property
     def bonus_money_sum(self):
-        return sum(bm.balance for bm in self.bonus_money_wallets)
+        return sum(bm.balance for bm in self.bonus_money_wallets if bm.depleted == False)
 
     def __init__(self, username=None, email=None, password_hash=None):
         self.username = username
