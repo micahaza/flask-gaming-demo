@@ -6,7 +6,6 @@ from flask_gaming.models import User
 from flask import current_app as app
 
 
-        
 @payment.route('/deposit', methods=('GET', 'POST'))
 @login_required
 def deposit():
@@ -15,8 +14,9 @@ def deposit():
     if request.method == "POST":
         user = User.query.get(session['user_id'])
         cashier = Cashier(app.config)
-        cashier.deposit(user, float(request.form['amount'])) 
+        cashier.deposit(user, float(request.form['amount']))
         return render_template('deposit.html')
+
 
 @payment.route('/withdraw', methods=('GET', 'POST'))
 @login_required
@@ -26,6 +26,5 @@ def withdraw():
     if request.method == "POST":
         user = User.query.get(session['user_id'])
         cashier = Cashier(app.config)
-        cashier.withdraw(user, float(request.form['amount'])) 
+        cashier.withdraw(user, float(request.form['amount']))
         return render_template('withdraw.html')
-

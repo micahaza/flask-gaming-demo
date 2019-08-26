@@ -1,4 +1,4 @@
-from flask_gaming.models import User, Bet, Win
+from flask_gaming.models import Bet, Win
 import random
 
 
@@ -6,8 +6,8 @@ class NotEnoughMoneyException(Exception):
     def __init__(self, message):
         self.message = message
 
+
 class BaseSpinner(object):
-    
     def __init__(self, config, user):
         self.config = config
         self.user = user
@@ -16,28 +16,31 @@ class BaseSpinner(object):
         # RNG magic :)
         return random.choice([0, 0, 1]) * 4
 
+
 class RealMoneySpinner(BaseSpinner):
-    
+
     def __init__(self, config, user):
         super(RealMoneySpinner, self).__init__(config, user)
-    
+
     def spin(self):
         win_amount = self.random_win()
         bet = Bet(self.config['BET_AMOUNT'], amount_type='real')
         win = Win(win_amount, amount_type='real')
+
         self.user.real_money_wallet.balance -= self.config['BET_AMOUNT']
         self.user.bets.append(bet)
         self.user.wins.append(win)
         self.user.real_money_wallet.balance += win_amount
         self.user.save()
 
+
 class BonusMoneySpinner(BaseSpinner):
-    
+
     def __init__(self, config, user):
         super(BonusMoneySpinner, self).__init__(config, user)
-    
+
     def mark_depleted_wallets(self):
-        for bw in (bw for bw in self.user.bonus_money_wallets if bw.depleted == False):
+        for bw in (bw for bw in self.user.bonus_money_wallets if bw.depleted is False):
             if bw.balance <= self.config['BET_AMOUNT']:
                 bw.depleted = True
         self.user.save()
@@ -48,24 +51,24 @@ class BonusMoneySpinner(BaseSpinner):
             self.user.real_money_wallet.balance += bonus_wallet.balance
             # clean up this bonus wallet
             bonus_wallet.balance = 0
-            bbonus_wallet.depleted = True
+            bonus_wallet.depleted = True
         self.user.save()
 
     def spin(self):
-
         self.mark_depleted_wallets()
         win_amount = self.random_win()
-        for bw in (bw for bw in self.user.bonus_money_wallets if bw.depleted == False):
+        for bw in (bw for bw in self.user.bonus_money_wallets if bw.depleted is False):
             bw.balance -= self.config['BET_AMOUNT']
-            bet = Bet(self.config['BET_AMOUNT'], amount_type='bonus', bonus_money_wallet_id = bw.id)
-            win = Win(win_amount, amount_type='bonus', bonus_money_wallet_id = bw.id)
+            bet = Bet(self.config['BET_AMOUNT'], amount_type='bonus', bonus_money_wallet_id=bw.id)
+            win = Win(win_amount, amount_type='bonus', bonus_money_wallet_id=bw.id)
             if win_amount > 0:
                 bw.balance += win_amount
             self.user.bets.append(bet)
             self.user.wins.append(win)
             self.bonus_money_convert(bw)
-            break;
+            break
         self.user.save()
+
 
 class GamePlay(object):
 

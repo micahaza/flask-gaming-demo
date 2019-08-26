@@ -4,10 +4,12 @@ from flask_gaming.helpers import login_required
 from flask_gaming.models import User
 from flask_gaming.game_play import GamePlay
 
+
 @game.route('/home')
 @login_required
 def index():
     return render_template('home.html')
+
 
 @game.route('/place-bet', methods=['GET', 'POST'])
 @login_required
@@ -17,4 +19,3 @@ def place_bet():
         game_play = GamePlay(current_app.config, user)
         game_play.spin()
     return render_template('place-a-bet.html')
-

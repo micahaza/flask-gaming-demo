@@ -1,8 +1,8 @@
 from . import registration
-from flask import request, render_template, redirect, session, url_for
-import os, markdown
+from flask import request, render_template, redirect, url_for
 from flask_gaming.models import User
 from flask_gaming import bcrypt
+
 
 @registration.route('/', methods=('GET', 'POST'))
 def index():
@@ -16,10 +16,9 @@ def index():
         if u_exists is not None:
             return redirect(url_for('registration.index'))
         else:
-             u = User()
-             u.username = username
-             u.email = email
-             u.password_hash = bcrypt.generate_password_hash(password)
-             u.save()
+            u = User()
+            u.username = username
+            u.email = email
+            u.password_hash = bcrypt.generate_password_hash(password)
+            u.save()
     return redirect(url_for('auth.login'))
-

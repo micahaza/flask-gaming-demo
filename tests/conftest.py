@@ -1,18 +1,19 @@
 import pytest
 from flask_gaming import create_app, db, bcrypt
 from flask_gaming.models import User
-from flask import session
 from flask_gaming.cashier import Cashier
 from flask_gaming.game_play import GamePlay
+
 
 @pytest.fixture(scope='module')
 def app():
     app = create_app('testing.cfg')
-    with app.app_context():   
+    with app.app_context():
         db.create_all()
         yield app
         db.session.remove()
         db.drop_all()
+
 
 @pytest.fixture(scope='module')
 def test_client(app):
@@ -25,9 +26,11 @@ def test_client(app):
 
     ctx.pop()
 
+
 @pytest.fixture(scope='module')
 def cashier(app):
     yield Cashier(app.config)
+
 
 @pytest.fixture(scope='module')
 def user(app):
@@ -36,14 +39,17 @@ def user(app):
     db.session.commit()
     yield user
 
+
 @pytest.fixture(scope='module')
 def game(app, user):
     yield GamePlay(app.config, user)
 
+
 @pytest.fixture(scope='module')
 def testdb(app):
     yield db
-    
+
+
 @pytest.fixture(scope='module')
 def logged_in_client(app, user):
     with app.test_client() as client:

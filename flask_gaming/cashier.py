@@ -1,8 +1,6 @@
-from . import db
 from flask_gaming.models import RealMoneyWallet, BonusMoneyWallet
-from flask_gaming import config
-
 from .game_play import NotEnoughMoneyException
+
 
 class Cashier(object):
     """
@@ -28,7 +26,7 @@ class Cashier(object):
 
     def login_bonus(self, user):
         bm = BonusMoneyWallet(self.config['LOGIN_BONUS'])
-        user.bonus_money_wallets.append(bm) 
+        user.bonus_money_wallets.append(bm)
         user.save()
 
     def __deposit_bonus(self, user, amount):

@@ -5,9 +5,11 @@ from flask_gaming import bcrypt
 from flask_gaming.cashier import Cashier
 from flask_gaming.helpers import login_required
 
+
 @auth.route('/')
 def index():
     return 'Home...'
+
 
 @auth.route('/login', methods=('GET', 'POST'))
 def login():
@@ -18,7 +20,7 @@ def login():
         password = request.form['password']
         login_user = User.query.filter_by(username=username).first()
         if login_user is not None:
-             if bcrypt.check_password_hash(login_user.password_hash, password) == True:
+            if bcrypt.check_password_hash(login_user.password_hash, password) is True:
                 session['logged_in'] = True
                 session['username'] = login_user.username
                 session['user_id'] = login_user.id
