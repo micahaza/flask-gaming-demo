@@ -40,6 +40,11 @@ WAGERING_REQUIREMENT = 20
 * flask db upgrade
 
 ## Run tests
+
+### You can run it with tox
+* tox
+
+### Or manually
 * export FLASK_ENV=development
 * export FLASK_APP=run.py
 * py.test -v
