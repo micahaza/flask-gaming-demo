@@ -76,8 +76,6 @@ def test_bonus_money_is_used_correcly(logged_in_client, user, testdb):
     user.real_money_wallet.balance = 0
     user.save()
     assert user.real_money_wallet.balance == 0
-    # reset user bonus moneys
-    
     testdb.engine.execute("delete from bets")
     testdb.engine.execute("delete from wins")
     testdb.engine.execute("delete from bonus_money_wallets")

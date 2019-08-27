@@ -19,7 +19,7 @@ def create_app(config_filename=None):
 def initialize_extensions(app):
     bcrypt.init_app(app)
     db.init_app(app)
-    from . import models
+    from . import models # noqa
     Migrate(app, db)
 
 
